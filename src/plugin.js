@@ -1,26 +1,22 @@
 function initPlugin() {
   const onFileInput = function(editor, file) {
-    const img = editor.dom.create('img');
+    const img = editor.dom.create('img', {id: `tinymce-new-image-${file.name}`});
     editor.selection.setNode(img);
-    // img.setAttribute('data-mce-id', '__mcenew');
-
-    // editor.focus();
-    // editor.selection.setContent(img.outerHTML);
-
-    // const insertedElem = editor.dom.select('*[data-mce-id="__mcenew"]')[0];
-    // insertedElem.setAttribute('data-mce-id', null);
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
       const base64Data = reader.result;
-      img.src = base64Data;
+      const img = editor.dom.select(`*[id="tinymce-new-image-${file.name}"]`)[0];
+      img.setAttribute('src', base64Data);
 
       const handler = editor.getParam('images_upload_handler');
       handler(
         file,
         (url) => {
-          img.src = url;
+          const img = editor.dom.select(`*[id="tinymce-new-image-${file.name}"]`)[0];
+          img.setAttribute('src', url);
+          img.setAttribute('id', '');
         },
         (err) => {
           alert('Upload failed');
