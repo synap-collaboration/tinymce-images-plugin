@@ -22,6 +22,10 @@ tinymce.create('tinymce.plugins.SynapImage', {
             }
 
             // input.click();
+          },
+          onChange: (e) => {
+            const file = e.control.value();
+            console.dir(file);
           }
       });
   },
