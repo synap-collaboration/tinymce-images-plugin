@@ -9,13 +9,16 @@ function initPlugin() {
     reader.readAsDataURL(file);
     reader.onload = () => {
       const base64Data = reader.result;
-      editor.dom.setAttrib(`*[id="tinymce-new-image-${file.name}"]`, { src, base64Data });
+      const img = editor.dom.select(`*[id="tinymce-new-image-${file.name}"]`)[0];
+      img.setAttribute('src', base64Data);
 
       const handler = editor.getParam('images_upload_handler');
       handler(
         file,
         (url) => {
-          editor.dom.setAttrib(`*[id="tinymce-new-image-${file.name}"]`, { src, url, id: null });
+          const img = editor.dom.select(`*[id="tinymce-new-image-${file.name}"]`)[0];
+          img.setAttribute('src', url);
+          img.setAttribute('id', '');
         },
         (err) => {
           alert('Upload failed');
