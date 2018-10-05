@@ -1,8 +1,10 @@
 function initPlugin() {
   const onFileInput = function(editor, file) {
+    // We use TinyMCE's editor.dom here (rather than document.createElement) as it is empirically more reliable within the editor
     const img = editor.dom.create('img', {id: `tinymce-new-image-${file.name}`});
     editor.selection.setNode(img);
 
+    // Get Base64 data of the image so that the user sees the image right away
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
@@ -28,7 +30,7 @@ function initPlugin() {
         ed.addButton('upload-button', {
             icon: 'image',
             tooltip: 'Insert an image',
-            onClick: function (wrappingEvent) {
+            onClick: function (e) {
               const input = document.createElement('input');
 
               input.setAttribute('type', 'file');
