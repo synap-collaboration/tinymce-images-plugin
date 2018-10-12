@@ -17,8 +17,12 @@ function initPlugin() {
         file,
         (url) => {
           const img = editor.dom.select(`*[id="tinymce-new-image-${file.name}"]`)[0];
-          img.setAttribute('src', url);
-          img.setAttribute('id', '');
+          
+          // If the user deletes the image before the upload completes, img won't exist
+          if (img) {
+            img.setAttribute('src', url);
+            img.removeAttribute('id');
+          }
         },
         (err) => {
           alert('Upload failed');
