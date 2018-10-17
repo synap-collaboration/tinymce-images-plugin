@@ -2,6 +2,9 @@ function initPlugin() {
   const onFileInput = function(editor, file) {
     // We use TinyMCE's editor.dom here (rather than document.createElement) as it is empirically more reliable within the editor
     const img = editor.dom.create('img', {id: `tinymce-new-image-${file.name}`});
+    if (!img && honeybadger) {
+      honeybadger.notify({ desc: 'Could not create img tag', fileObj: file });
+    }
     editor.selection.setNode(img);
 
     // Get Base64 data of the image so that the user sees the image right away
@@ -10,6 +13,9 @@ function initPlugin() {
     reader.onload = () => {
       const base64Data = reader.result;
       const img = editor.dom.select(`*[id="tinymce-new-image-${file.name}"]`)[0];
+      if (!img && honeybadger) {
+        honeybadger.notify({ desc: 'Could not find img after reading base64 data', fileObj: file });
+      }
       img.setAttribute('src', base64Data);
 
       const handler = editor.getParam('images_upload_handler');
@@ -25,9 +31,19 @@ function initPlugin() {
           }
         },
         (err) => {
-          alert('Upload failed');
+          editor.dom.remove(`*[id="tinymce-new-image-${file.name}"]`);
+          editor.getParam('image_conversion_error_handler')();
         }
       );
+    }
+
+    reader.onerror = () => {
+      reader.abort()
+      if (honeybadger) {
+        honeybadger.notify({ desc: 'Failed to read base64 image data', fileObj: file });
+      }
+      editor.dom.remove(`*[id="tinymce-new-image-${file.name}"]`);
+      editor.getParam('image_conversion_error_handler')();
     }
   }
 
@@ -43,11 +59,15 @@ function initPlugin() {
               input.setAttribute('type', 'file');
               input.setAttribute('accept', 'image/*');
 
+              input.onclick = function(e) {
+                this.value = null;
+              }
+
               input.onchange = (e) => {
                 e.preventDefault();
                 const files = e.target.files;
 
-                if (files.length) {
+                if (files.length && files.length > 0) {
                   onFileInput(ed, files[0]);
                 }
               }
