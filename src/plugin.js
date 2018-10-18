@@ -2,8 +2,8 @@ function initPlugin() {
   const onFileInput = function(editor, file) {
     // We use TinyMCE's editor.dom here (rather than document.createElement) as it is empirically more reliable within the editor
     const img = editor.dom.create('img', {id: `tinymce-new-image-${file.name}`});
-    if (!img && honeybadger) {
-      honeybadger.notify({ desc: 'Could not create img tag', fileObj: file });
+    if (!img && Honeybadger) {
+      Honeybadger.notify({ desc: 'Could not create img tag', fileObj: file });
     }
     editor.selection.setNode(img);
 
@@ -13,8 +13,8 @@ function initPlugin() {
     reader.onload = () => {
       const base64Data = reader.result;
       const img = editor.dom.select(`*[id="tinymce-new-image-${file.name}"]`)[0];
-      if (!img && honeybadger) {
-        honeybadger.notify({ desc: 'Could not find img after reading base64 data', fileObj: file });
+      if (!img && Honeybadger) {
+        Honeybadger.notify({ desc: 'Could not find img after reading base64 data', fileObj: file });
       }
       img.setAttribute('src', base64Data);
 
@@ -39,8 +39,9 @@ function initPlugin() {
 
     reader.onerror = () => {
       reader.abort()
-      if (honeybadger) {
-        honeybadger.notify({ desc: 'Failed to read base64 image data', fileObj: file });
+      console.error("Failed to read base64 image data");
+      if (Honeybadger) {
+        Honeybadger.notify({ desc: 'Failed to read base64 image data', fileObj: file });
       }
       editor.dom.remove(`*[id="tinymce-new-image-${file.name}"]`);
       editor.getParam('image_conversion_error_handler')();
