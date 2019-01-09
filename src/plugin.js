@@ -29,6 +29,8 @@ function initPlugin() {
             img.setAttribute('src', url);
             img.removeAttribute('id');
           }
+
+          return editor.getContent();
         },
         (err) => {
           editor.dom.remove(`*[id="tinymce-new-image-${file.name}"]`);
