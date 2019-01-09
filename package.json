@@ -1,6 +1,6 @@
 {
   "name": "tinymce-images-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Alternate image upload plugin for tinyMCE",
   "main": "src/plugin.js",
   "scripts": {
