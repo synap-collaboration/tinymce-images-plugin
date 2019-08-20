@@ -1,6 +1,6 @@
 {
   "name": "tinymce-images-plugin",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Alternate image upload plugin for tinyMCE",
   "main": "src/plugin.js",
   "scripts": {
@@ -17,8 +17,9 @@
   },
   "homepage": "https://github.com/synap-collaboration/tinymce-images-plugin#readme",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-minify": "^0.4.3"
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-minify": "^0.5.1"
   }
 }
